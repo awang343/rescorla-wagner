@@ -223,32 +223,23 @@ st.caption(
     "**ΣV** = total prediction from all cues present"
 )
 
-def _on_preset_change():
-    """Clear all cue/trial widget state so defaults reload."""
-    for i in range(8):
-        st.session_state.pop(f"cue_name_{i}", None)
-        st.session_state.pop(f"cue_alpha_{i}", None)
-    st.session_state.pop("num_cues", None)
-    st.session_state.pop("trial_text", None)
-    st.session_state.pop("beta", None)
-
-
 with st.sidebar:
     st.header("Parameters")
 
-    preset = st.selectbox(
-        "Preset Scenario", list(PRESETS.keys()),
-        key="preset", on_change=_on_preset_change,
-    )
+    preset = st.selectbox("Preset Scenario", list(PRESETS.keys()))
+
+    # Use preset name in all widget keys so switching presets creates fresh widgets
+    pk = preset
 
     defaults = DEFAULT_CUES[preset]
 
-    beta = st.slider("β (US learning rate)", 0.01, 1.0, DEFAULT_BETA, 0.01, key="beta")
+    beta = st.slider("β (US learning rate)", 0.01, 1.0, DEFAULT_BETA, 0.01,
+                      key=f"beta_{pk}")
 
     st.subheader("Cues")
     num_cues = st.number_input(
         "Number of cues", min_value=1, max_value=8, value=len(defaults),
-        key="num_cues",
+        key=f"num_cues_{pk}",
     )
 
     cue_defs: List[Tuple[str, float]] = []
@@ -258,11 +249,12 @@ with st.sidebar:
         default_alpha = defaults[i][1] if i < len(defaults) else 0.3
         with col1:
             name = st.text_input(
-                f"Cue {i + 1} name", value=default_name, key=f"cue_name_{i}"
+                f"Cue {i + 1} name", value=default_name, key=f"cue_name_{pk}_{i}"
             )
         with col2:
             alpha = st.slider(
-                f"α {i + 1}", 0.01, 1.0, default_alpha, 0.01, key=f"cue_alpha_{i}"
+                f"α {i + 1}", 0.01, 1.0, default_alpha, 0.01,
+                key=f"cue_alpha_{pk}_{i}"
             )
         cue_defs.append((name, alpha))
 
@@ -272,7 +264,8 @@ with st.sidebar:
         "Example: `20 A+B +` (20 trials, A & B, US present)"
     )
     trial_text = st.text_area(
-        "Trials", value=DEFAULT_TRIAL_TEXT[preset], height=150, key="trial_text"
+        "Trials", value=DEFAULT_TRIAL_TEXT[preset], height=150,
+        key=f"trial_text_{pk}"
     )
 
 run = st.button("Run Simulation", type="primary", use_container_width=True)
