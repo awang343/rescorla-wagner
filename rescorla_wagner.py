@@ -208,10 +208,13 @@ def make_plot(result: SimResult):
     ax.legend(fontsize=10)
     ax.grid(True, alpha=0.3)
 
+    # Skip index 0 ("start") and draw separators between phases
     prev = None
     for i, lbl in enumerate(result.trial_labels):
+        if i == 0:
+            continue
         if prev is not None and lbl != prev:
-            ax.axvline(i + 0.5, color="#888", linewidth=1, linestyle=":")
+            ax.axvline(i - 0.5, color="#888", linewidth=1, linestyle=":")
         prev = lbl
 
     fig.tight_layout()
