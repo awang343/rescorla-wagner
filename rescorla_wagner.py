@@ -222,14 +222,6 @@ def make_plot(result: SimResult):
 
 
 st.set_page_config(page_title="Rescorla-Wagner Simulator", layout="wide")
-st.markdown(
-    """<style>
-    [data-testid='stSidebar'] > div:first-child {padding-top: 1rem;}
-    [data-testid='stSidebar'] .st-emotion-cache-1gwvy71 {padding-top: 0;}
-    [data-testid='stSidebarContent'] {padding-top: 1rem;}
-    </style>""",
-    unsafe_allow_html=True,
-)
 st.title("CPSY 0100 FFP: Rescorla-Wagner Model Simulator")
 
 st.latex(r"\Delta V_i = \alpha_i \cdot \beta \cdot (\lambda - \Sigma V)")
