@@ -268,7 +268,8 @@ with st.sidebar:
 
     st.subheader("Trial Sequence")
     st.caption(
-        "One phase per line: `<n> <cue1+cue2...> <+/->`"
+        "One phase per line:"
+        "`<n> <cue1+cue2...> <+/->`"
     )
     trial_text = st.text_area(
         "Trials", value=DEFAULT_TRIAL_TEXT[preset], height=150,
