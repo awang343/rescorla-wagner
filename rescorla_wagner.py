@@ -31,6 +31,11 @@ def run_simulation(cues: Dict[str, Cue], trials: List[Trial], beta: float) -> Si
     for name in cues:
         result.histories[name] = []
 
+    # Record initial state (trial 0, all V = 0)
+    result.trial_labels.append("start")
+    for name, cue in cues.items():
+        result.histories[name].append(cue.V)
+
     for trial in trials:
         lam = trial.lambda_val if trial.us_present else 0.0
         V_total = sum(cues[c].V for c in trial.cues_present if c in cues)
@@ -189,7 +194,7 @@ def parse_trials(
 
 def make_plot(result: SimResult):
     fig, ax = plt.subplots(figsize=(8, 5))
-    x = list(range(1, len(result.trial_labels) + 1))
+    x = list(range(len(result.trial_labels)))
 
     for idx, (name, hist) in enumerate(result.histories.items()):
         color = COLORS[idx % len(COLORS)]
