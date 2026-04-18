@@ -214,7 +214,7 @@ def make_plot(result: SimResult):
         if i == 0:
             continue
         if prev is not None and lbl != prev:
-            ax.axvline(i - 0.5, color="#888", linewidth=1, linestyle=":")
+            ax.axvline(i - 1, color="#888", linewidth=1, linestyle=":")
         prev = lbl
 
     fig.tight_layout()
