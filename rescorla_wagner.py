@@ -276,7 +276,7 @@ with st.sidebar:
         key=f"trial_text_{pk}"
     )
 
-run = st.button("Run Simulation", type="primary", use_container_width=True)
+    run = st.button("Run Simulation", type="primary", use_container_width=True)
 
 if run:
     try:
