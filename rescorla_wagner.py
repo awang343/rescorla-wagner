@@ -228,12 +228,26 @@ with st.sidebar:
 
     preset = st.selectbox("Preset Scenario", list(PRESETS.keys()))
 
+    # Reset widget state when preset changes
+    if "prev_preset" not in st.session_state:
+        st.session_state.prev_preset = preset
+    if st.session_state.prev_preset != preset:
+        st.session_state.prev_preset = preset
+        defaults = DEFAULT_CUES[preset]
+        for i in range(8):
+            st.session_state.pop(f"cue_name_{i}", None)
+            st.session_state.pop(f"cue_alpha_{i}", None)
+        st.session_state.pop("num_cues", None)
+        st.session_state.pop("trial_text", None)
+        st.rerun()
+
     beta = st.slider("β (US learning rate)", 0.01, 1.0, DEFAULT_BETA, 0.01)
 
     st.subheader("Cues")
     defaults = DEFAULT_CUES[preset]
     num_cues = st.number_input(
-        "Number of cues", min_value=1, max_value=8, value=len(defaults)
+        "Number of cues", min_value=1, max_value=8, value=len(defaults),
+        key="num_cues",
     )
 
     cue_defs: List[Tuple[str, float]] = []
@@ -256,7 +270,9 @@ with st.sidebar:
         "One phase per line: `<n> <cue1+cue2...> <+/->`  \n"
         "Example: `20 A+B +` (20 trials, A & B, US present)"
     )
-    trial_text = st.text_area("Trials", value=DEFAULT_TRIAL_TEXT[preset], height=150)
+    trial_text = st.text_area(
+        "Trials", value=DEFAULT_TRIAL_TEXT[preset], height=150, key="trial_text"
+    )
 
 run = st.button("Run Simulation", type="primary", use_container_width=True)
 
