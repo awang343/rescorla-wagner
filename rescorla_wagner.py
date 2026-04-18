@@ -223,28 +223,29 @@ st.caption(
     "**ΣV** = total prediction from all cues present"
 )
 
+def _on_preset_change():
+    """Clear all cue/trial widget state so defaults reload."""
+    for i in range(8):
+        st.session_state.pop(f"cue_name_{i}", None)
+        st.session_state.pop(f"cue_alpha_{i}", None)
+    st.session_state.pop("num_cues", None)
+    st.session_state.pop("trial_text", None)
+    st.session_state.pop("beta", None)
+
+
 with st.sidebar:
     st.header("Parameters")
 
-    preset = st.selectbox("Preset Scenario", list(PRESETS.keys()))
+    preset = st.selectbox(
+        "Preset Scenario", list(PRESETS.keys()),
+        key="preset", on_change=_on_preset_change,
+    )
 
-    # Reset widget state when preset changes
-    if "prev_preset" not in st.session_state:
-        st.session_state.prev_preset = preset
-    if st.session_state.prev_preset != preset:
-        st.session_state.prev_preset = preset
-        defaults = DEFAULT_CUES[preset]
-        for i in range(8):
-            st.session_state.pop(f"cue_name_{i}", None)
-            st.session_state.pop(f"cue_alpha_{i}", None)
-        st.session_state.pop("num_cues", None)
-        st.session_state.pop("trial_text", None)
-        st.rerun()
+    defaults = DEFAULT_CUES[preset]
 
-    beta = st.slider("β (US learning rate)", 0.01, 1.0, DEFAULT_BETA, 0.01)
+    beta = st.slider("β (US learning rate)", 0.01, 1.0, DEFAULT_BETA, 0.01, key="beta")
 
     st.subheader("Cues")
-    defaults = DEFAULT_CUES[preset]
     num_cues = st.number_input(
         "Number of cues", min_value=1, max_value=8, value=len(defaults),
         key="num_cues",
