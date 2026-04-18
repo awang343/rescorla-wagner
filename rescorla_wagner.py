@@ -219,8 +219,7 @@ def make_plot(result: SimResult):
 
 
 st.set_page_config(page_title="Rescorla-Wagner Simulator", layout="wide")
-st.title("CPSY 0100: Rescorla-Wagner Model Simulator")
-st.header("Alan Wang")
+st.title("CPSY 0100 FFP: Rescorla-Wagner Model Simulator")
 
 st.latex(r"\Delta V_i = \alpha_i \cdot \beta \cdot (\lambda - \Sigma V)")
 st.caption(
